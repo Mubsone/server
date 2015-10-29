@@ -13,15 +13,25 @@ We first have to send a GET request to the server without any information. The s
 and include it as a parameter in the POST request.
 
 Example:
+
 I send a GET request to http://www.mubsone.com/accounts/register
+
 Server responds with CSRF token 'asdfkYsa7djasdkjS'
+
 Now I send a POST request to http://www.mubsone.com/accounts/register with parameters: 
+
 username=brajan, 
+
 email=brajan@mail.com, 
+
 password1=pass, 
+
 password2=pass, 
+
 csrfmiddlewaretoken=asdfkYsa7djasdkjS
 
 The server checks if the csrf token is the same as the one that it sent before in the previous GET request. If it is, it says everything is ok and registers the user.
 
 How to do POST http requests in java: http://stackoverflow.com/questions/3324717/sending-http-post-request-in-java
+
+Just replace the parameters in the link above ('param-1' and 'param-2' etc) with parameters requested by the feature (example: 'username', 'email' and also add other parameters like 'password1', 'password2', 'csrfmiddlewaretoken')
