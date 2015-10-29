@@ -1,10 +1,8 @@
 #!/usr/bin/python
 
-'''
-In order to test this first start a mail server with:
-python -m smtpd -n -c DebuggingServer localhost:1025
+#In order to test this first start a mail server with:
+#python -m smtpd -n -c DebuggingServer localhost:1025
 
-'''
 
 import sys
 import requests
@@ -25,7 +23,7 @@ csrf_token = client.cookies['csrftoken']
 
 r = client.post(url, data={
 				'csrfmiddlewaretoken'	: csrf_token,
-				'username'		: 'brajan',
+				'username'		: 'redeyez',
 				'password1'		: 'pass',
 				'password2'		: 'pass',
 				'email'			: 'brace@mail.com',
