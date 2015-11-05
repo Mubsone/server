@@ -7,10 +7,12 @@ from django.dispatch import receiver
 
 class MubsoneUser(models.Model):
     user = models.OneToOneField(User)
-    rating = models.IntegerField(default=0)
+    rating = models.FloatField(default=0.0)
     fans = models.IntegerField(default=0)
     biography = models.TextField(max_length=256)
     avatar = models.CharField(max_length=64)
+    videos = models.IntegerField(default=0)
+    contests = models.IntegerField(default=0)
     is_banned = models.BooleanField(default=False)
     is_premium = models.BooleanField(default=False)
 
