@@ -25,5 +25,5 @@ class MubsoneUser(models.Model):
 
 @receiver(user_activated)
 def registerMubsoneUser(sender, user, request, **kwargs):
-    mUser = MubsoneUser(user=user, rating=0, fans=0, biography='', avatar='', is_banned=False, is_premium=False)
+    mUser = MubsoneUser(user=user, rating=0, fans=0, biography='', avatar='', videos=0, contests=0, is_banned=False, is_premium=False)
     mUser.save()
