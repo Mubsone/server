@@ -146,18 +146,22 @@ def change_password(request):
 def edit_profile(request):
     if request.method == "POST":
         edit_profile_form = EditProfileForm(request.POST)
+        user              = MubsoneUser.objects.get(user=request.user)
+
         if edit_profile_form.is_valid():
             username    = edit_profile_form.cleaned_data.get('username')
             first_name  = edit_profile_form.cleaned_data.get('first_name')
             last_name   = edit_profile_form.cleaned_data.get('last_name')
             biography   = edit_profile_form.cleaned_data.get('biography')
 
-            user                    = MubsoneUser.objects.get(user=request.user)
-
-            user.biography          = biography
-            user.user.username      = username
-            user.user.first_name    = first_name
-            user.user.last_name     = last_name
+            if username is not None:
+                user.user.username      = username
+            if first_name is not None:
+                user.user.first_name    = first_name
+            if last_name is not None:
+                user.user.last_name     = last_name
+            if biography is not None:
+                user.biography          = biography
 
             user.save()
             user.user.save()
