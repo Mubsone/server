@@ -2,7 +2,7 @@
 import sys
 import requests
 
-url = 'http://localhost:8000/accounts/login/'
+url = 'http://localhost:8000/accounts/password/change/'
 
 client = requests.Session()
 
@@ -18,8 +18,8 @@ csrf_token = client.cookies['csrftoken']
 
 r = client.post(url, data={
 				'csrfmiddlewaretoken'	: csrf_token,
-				'username'		: 'brajan',
-				'password'		: 'pass',
+				'old_password'		: 'pass',
+				'new_password'		: 'password',
 			},
 		headers=dict(Referer=url))
 print r.text
