@@ -5,7 +5,7 @@ from django.contrib.auth import authenticate, login, logout
 from django.shortcuts import get_object_or_404
 from django.contrib.auth.decorators import login_required
 from django.http import JsonResponse
-from .forms import LoginForm, RegisterForm, ChangePasswordForm
+from .forms import LoginForm, RegisterForm, ChangePasswordForm, EditProfileForm
 # Create your views here.
 
 def login_view(request):
@@ -141,3 +141,32 @@ def change_password(request):
     elif request.method == "GET":
         change_password_form = ChangePasswordForm()
         return render(request, 'accounts/change_password.html', {'form': change_password_form})
+
+@login_required
+def edit_profile(request):
+    if request.method == "POST":
+        edit_profile_form = EditProfileForm(request.POST)
+        if edit_profile_form.is_valid():
+            username    = edit_profile_form.cleaned_data.get('username')
+            first_name  = edit_profile_form.cleaned_data.get('first_name')
+            last_name   = edit_profile_form.cleaned_data.get('last_name')
+            biography   = edit_profile_form.cleaned_data.get('biography')
+
+            user                    = MubsoneUser.objects.get(user=request.user)
+
+            user.biography          = biography
+            user.user.username      = username
+            user.user.first_name    = first_name
+            user.user.last_name     = last_name
+
+            user.save()
+            user.user.save()
+
+            return JsonResponse(
+                {
+                    "status" : "ok"
+                }
+            )
+    elif request.method == "GET":
+        edit_profile_form = EditProfileForm()
+        return render(request, 'accounts/edit_profile.html', {'form': edit_profile_form})
