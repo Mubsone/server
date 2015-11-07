@@ -1,10 +1,11 @@
 from django.shortcuts import render
 from .models import MubsoneUser
+from django.contrib.auth.models import User
 from django.contrib.auth import authenticate, login, logout
 from django.shortcuts import get_object_or_404
 from django.contrib.auth.decorators import login_required
 from django.http import JsonResponse
-from .forms import LoginForm
+from .forms import LoginForm, RegisterForm, ChangePasswordForm
 # Create your views here.
 
 def login_view(request):
@@ -70,3 +71,73 @@ def logout_view(request):
             "status" : "ok"
         }
     )
+
+def register(request):
+    if request.method == "POST":
+        register_form = RegisterForm(request.POST)
+        if register_form.is_valid():
+            username    = register_form.cleaned_data.get('username')
+            password    = register_form.cleaned_data.get('password')
+            email       = register_form.cleaned_data.get('email')
+            if MubsoneUser.objects.filter(user__username=username).exists():
+                return JsonResponse(
+                    {
+                        "status" : "error",
+                        "reason" : "Username already exists."
+                    }
+                )
+            elif MubsoneUser.objects.filter(user__email=email).exists():
+                return JsonResponse(
+                    {
+                        "status" : "error",
+                        "reason" : "Email already exists."
+                    }
+                )
+            else:
+                user = User.objects.create_user(username=username, password=password, email=email)
+                user.save()
+                mubsoneUser = MubsoneUser(user=user,
+                                          rating=0,
+                                          fans=0,
+                                          biography='',
+                                          avatar='',
+                                          videos=0,
+                                          contests=0,
+                                          is_banned=False,
+                                          is_premium=False)
+                mubsoneUser.save()
+                return JsonResponse(
+                    {
+                        "status" : "ok"
+                    }
+                )
+    elif request.method == "GET":
+        register_form = RegisterForm()
+        return render(request, 'accounts/register.html', {'form': register_form})
+
+@login_required
+def change_password(request):
+    if request.method == "POST":
+        change_password_form = ChangePasswordForm(request.POST)
+        if change_password_form.is_valid():
+            old_password = change_password_form.cleaned_data.get('old_password')
+            new_password = change_password_form.cleaned_data.get('new_password')
+            user = authenticate(username=request.user.username, password=old_password)
+            if user is not None:
+                user.set_password(new_password)
+                user.save()
+                return JsonResponse(
+                    {
+                        "status" : "ok"
+                    }
+                )
+            else:
+                return JsonResponse(
+                    {
+                        "status" : "error",
+                        "reason" : "Wrong old password."
+                    }
+                )
+    elif request.method == "GET":
+        change_password_form = ChangePasswordForm()
+        return render(request, 'accounts/change_password.html', {'form': change_password_form})

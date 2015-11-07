@@ -23,10 +23,9 @@ csrf_token = client.cookies['csrftoken']
 
 r = client.post(url, data={
 				'csrfmiddlewaretoken'	: csrf_token,
-				'username'		: 'redeyez',
-				'password1'		: 'pass',
-				'password2'		: 'pass',
-				'email'			: 'brace@mail.com',
+				'username'		: 'brajan',
+				'password'		: 'pass',
+				'email'			: 'brace2@mail.com',
 			},
 		headers=dict(Referer=url))
 print r.text
