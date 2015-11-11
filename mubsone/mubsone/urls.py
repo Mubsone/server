@@ -17,7 +17,7 @@ from django.conf.urls import include, url
 from django.contrib import admin
 
 urlpatterns = [
+    url(r'^accounts/login/', 'rest_framework_jwt.views.obtain_jwt_token'),
     url(r'^accounts/', include('accounts.urls')),
-    # url(r'^accounts/', include('registration.backends.default.urls')),
     url(r'^admin/', include(admin.site.urls)),
 ]

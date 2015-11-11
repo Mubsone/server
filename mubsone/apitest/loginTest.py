@@ -10,6 +10,9 @@ client = requests.Session()
 client.get(url)
 
 #Now we get the CSRF token.
+for cookie in client.cookies:
+	print cookie
+
 csrf_token = client.cookies['csrftoken']
 
 #Now we need to send the data for registration. The data needed is username, email, password1 and password2.
@@ -18,7 +21,7 @@ csrf_token = client.cookies['csrftoken']
 
 r = client.post(url, data={
 				'csrfmiddlewaretoken'	: csrf_token,
-				'username'		: 'red',
+				'username'		: 'brajan',
 				'password'		: 'pass',
 			},
 		headers=dict(Referer=url))

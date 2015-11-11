@@ -38,7 +38,7 @@ INSTALLED_APPS = (
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'django.contrib.sites',
-    # 'registration',
+    'rest_framework',
     'accounts',
 )
 
@@ -107,13 +107,17 @@ STATIC_URL = '/static/'
 # django.contrib.sites
 SITE_ID = 1
 
-#registration
-ACCOUNT_ACTIVATION_DAYS = 7
-REGISTRATION_DEFAULT_FROM_EMAIL = 'mikel@mubsone.com'
-REGISTRATION_EMAIL_HTML = True
-REGISTRATION_AUTO_LOGIN = True
-EMAIL_HOST = 'localhost'
-EMAIL_PORT = 1025
-EMAIL_HOST_USER = ''
-EMAIL_HOST_PASSWORD = ''
-EMAIL_USE_TLS = False
+REST_FRAMEWORK = {
+    'DEFAULT_PERMISSION_CLASSES': (
+        'rest_framework.permissions.IsAuthenticated',
+    ),
+    'DEFAULT_AUTHENTICATION_CLASSES': (
+        'rest_framework.authentication.SessionAuthentication',
+        'rest_framework.authentication.BasicAuthentication',
+        'rest_framework_jwt.authentication.JSONWebTokenAuthentication',
+    ),
+}
+
+JWT_AUTH = {
+	'JWT_AUTH_HEADER_PREFIX': 'JWT',
+}
