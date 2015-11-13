@@ -1,18 +1,12 @@
 from django.shortcuts import render
 from .models import MubsoneUser
 from django.contrib.auth.models import User
-from django.contrib.auth import authenticate, login, logout
-from django.shortcuts import get_object_or_404
-from django.http import JsonResponse
 from rest_framework.views import APIView
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
+from rest_framework.parsers import JSONParser
 from rest_framework_jwt.authentication import JSONWebTokenAuthentication
-from .serializers import MubsoneUserSerializer
-from rest_framework import status
-
-from .forms import LoginForm, RegisterForm, ChangePasswordForm, EditProfileForm
-
+import json
 
 # Create your views here.
 
@@ -42,9 +36,26 @@ class EditProfileView(APIView):
     permission_classes = (IsAuthenticated, )
     authentication_classes = (JSONWebTokenAuthentication, )
 
+    parser_classes = (JSONParser, )
+
     def post(self, request, format=None):
-        serializer = MubsoneUserSerializer(request.data)
-        if serializer.is_valid():
-            serializer.save()
-            return Response(serializer.data, status=status.HTTP_201_CREATED)
-        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+        json_data = json.loads(request.body)
+        print "JSON: "
+        print json_data
+
+        mUser = MubsoneUser.objects.get(user__username=request.user.username)
+        print mUser.user.username
+        print mUser.user.first_name
+        # mUser.user.username = json_data["username"]
+        mUser.user.first_name = json_data["first_name"]
+        mUser.user.last_name = json_data["last_name"]
+        mUser.biography = json_data["biography"]
+
+        mUser.user.save()
+
+        return Response(
+            {
+                "status" : "ok"
+
+            }
+        )
