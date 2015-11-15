@@ -40,18 +40,15 @@ class EditProfileView(APIView):
 
     def post(self, request, format=None):
         json_data = json.loads(request.body)
-        print "JSON: "
-        print json_data
 
-        mUser = MubsoneUser.objects.get(user__username=request.user.username)
-        print mUser.user.username
-        print mUser.user.first_name
-        # mUser.user.username = json_data["username"]
+        mUser = MubsoneUser.objects.get(user=request.user)
+        mUser.user.username = json_data["username"]
         mUser.user.first_name = json_data["first_name"]
         mUser.user.last_name = json_data["last_name"]
         mUser.biography = json_data["biography"]
 
         mUser.user.save()
+        mUser.save()
 
         return Response(
             {
