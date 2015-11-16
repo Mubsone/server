@@ -1,4 +1,3 @@
-from django.shortcuts import render
 from .models import MubsoneUser
 from django.contrib.auth.models import User
 from rest_framework.views import APIView
@@ -6,7 +5,10 @@ from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from rest_framework.parsers import JSONParser
 from rest_framework_jwt.authentication import JSONWebTokenAuthentication
+from django.views.decorators.csrf import csrf_exempt
+
 import json
+
 
 # Create your views here.
 
@@ -53,6 +55,28 @@ class EditProfileView(APIView):
         return Response(
             {
                 "status" : "ok"
+            }
+        )
 
+@csrf_exempt
+class RegisterView(APIView):
+    parser_classes = (JSONParser, )
+
+    def post(self, request, format=None):
+        json_data = json.loads(request.body)
+
+        username    = json_data["username"]
+        email       = json_data["email"]
+        password    = json_data["password"]
+
+        user        = User.objects.create_user(username = username, email = email, password = password)
+        mUser       = MubsoneUser.objects.create(user=user)
+
+        user.save()
+        mUser.save()
+
+        return Response(
+            {
+                "status" : "ok"
             }
         )

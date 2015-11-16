@@ -1,6 +1,6 @@
 from django.db import models
 from django.contrib.auth.models import User
-from registration.signals import user_activated
+# from registration.signals import user_activated
 from django.dispatch import receiver
 # Create your models here.
 
@@ -23,7 +23,7 @@ class MubsoneUser(models.Model):
     def __str__(self):
         return self.user.username
 
-@receiver(user_activated)
-def registerMubsoneUser(sender, user, request, **kwargs):
-    mUser = MubsoneUser(user=user, rating=0, fans=0, biography='', avatar='', videos=0, contests=0, is_banned=False, is_premium=False)
-    mUser.save()
+# @receiver(user_activated)
+# def registerMubsoneUser(sender, user, request, **kwargs):
+#     mUser = MubsoneUser(user=user, rating=0, fans=0, biography='', avatar='', videos=0, contests=0, is_banned=False, is_premium=False)
+#     mUser.save()
