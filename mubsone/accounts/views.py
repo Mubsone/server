@@ -58,7 +58,6 @@ class EditProfileView(APIView):
             }
         )
 
-@csrf_exempt
 class RegisterView(APIView):
     parser_classes = (JSONParser, )
 
